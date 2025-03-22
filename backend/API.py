@@ -91,13 +91,13 @@ async def save_prompts(prompt: Prompt):
 
 ### Connect to OPENAI
 
-client = openai.OpenAI(api_key='OPENAI_API_KEY') # Connect to OpenAI with your API key
+client = openai.OpenAI(api_key='OPEN_AI_KEY') # Connect to OpenAI with your API key
 def ask_LLM(question: str) -> str:
     try:
         response = client.chat.completions.create(
             model="gpt-4",
             messages=[
-                {"role": "system", "content": "You are a legal advisor."},
+                {"role": "system", "content": "You are a legal advisor. Only respond to legal questions related to law, contracts, rights, and legal procedures. If the question is not related to legal topics, respond with 'I can only answer legal questions related to law, contracts, rights, and legal procedures.'"},
                 {"role": "user", "content": question}
             ]
         )
