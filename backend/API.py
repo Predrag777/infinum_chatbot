@@ -61,10 +61,11 @@ async def save_prompts(prompt: Prompt):
     cursor = conn.cursor()
     
     try:
-        insert_chat = "INSERT INTO chat (title) VALUES (%s) RETURNING id" # Insert new chat in db and return chat's id
+        insert_chat = "INSERT INTO chat (title) VALUES (%s)"
+
         cursor.execute(insert_chat, (title,))
-        chat_id = cursor.fetchone()[0]
-        
+        conn.commit()
+        chat_id = cursor.lastrowid 
         for i in range(0, len(prompts), 2):  
             question = prompts[i]
             answer = prompts[i + 1] if i + 1 < len(prompts) else ""  
