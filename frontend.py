@@ -17,7 +17,6 @@ except Exception as e:
 
 
 
-
 # Save discussion history
 if 'history' not in st.session_state:
     st.session_state.history = []   # Initialize history in session
@@ -28,12 +27,24 @@ if 'history' not in st.session_state:
 # Place for the user prompt
 user_prompt=st.text_input("You: ")
 
+if user_prompt:
+    st.session_state.history.append(f"You: {user_prompt}")
+    answer="Not connected to APi for chatbot"
+
+    st.session_state.history.append(f'JurisMind: {answer}')
+
+    for msg in st.session_state.history:
+        if "You" in msg:
+            st.markdown(f"<p style='color: blue'>{msg}</p>", unsafe_allow_html=True)
+        elif 'JurisMind' in msg:
+            st.markdown(f"<p style='color: green'>{msg}</p>", unsafe_allow_html=True)
 
 
 
 ############################Sidebar
 # Sidebar where we would save history of conversation
 st.sidebar.title("History")
+
 
 
 # Check if there are old chats
