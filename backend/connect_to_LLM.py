@@ -1,6 +1,6 @@
 import openai
 
-client = openai.OpenAI(api_key="enter_valid_API_key")
+client = openai.OpenAI(api_key="YOUR-KEY")
 
 def ask_openai(question: str) -> str:
     try:
