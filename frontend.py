@@ -1,6 +1,22 @@
 import streamlit as st
+import requests
 
 st.title("Infinum JurisMind")
+
+
+# API response from history
+try:
+    response = requests.get('http://127.0.0.1:8000/history') # History API endpoint
+    if response.status_code == 200:
+        api_history = response.json()  
+        st.session_state.history = api_history  
+    else:
+        st.error("Can not connect to server")
+except Exception as e:
+    st.error(f"Server error: {str(e)}")
+
+
+
 
 # Save discussion history
 if 'history' not in st.session_state:
