@@ -11,7 +11,7 @@ def connect_to_db():
             host='localhost',
             user='root',
             password='',
-            database='chat' # My table
+            database='infinum_chat' # My table
     )
 
 # Retrieving history from DB
@@ -20,7 +20,21 @@ async def get_history():
     conn=connect_to_db()    # Open connection with DB
     cursor=conn.cursor()    # init cursor
 
-    cursor.execute("SELECT * FROM chats") # Execute MYSQL prompt
+    cursor.execute("SELECT title FROM `chat`") # Execute MYSQL prompt
+    results=cursor.fetchall() # Take results
+
+    cursor.close()  
+    conn.close()    # Close connection
+
+    return ([row[0]] for row in results)
+
+
+@app.get("history")
+async def get_history():
+    conn=connect_to_db()    # Open connection with DB
+    cursor=conn.cursor()    # init cursor
+
+    cursor.execute("SELECT p.id, c.title, p.question, p.answer FROM prompt p JOIN chat c ON p.chat = c.id;") # Execute MYSQL prompt
     results=cursor.fetchall() # Take results
 
     cursor.close()  
@@ -29,10 +43,7 @@ async def get_history():
     return ([row[0], row[1], row[2], row[3]] for row in results)
 
 
-
-
-client = openai.OpenAI(api_key="YOUR-KEY")
-# 
+client = openai.OpenAI(api_key="YOUR-KEY") # Connect to OpenAI with your API key
 def ask_LLM(question: str) -> str:
     try:
         response = client.chat.completions.create(
@@ -46,6 +57,9 @@ def ask_LLM(question: str) -> str:
     except Exception as e:
         return f"Error: {str(e)}"
 
+
+
+# API endpoint for bot response
 @app.get("/ask")
 async def get_answer(prompt:str):
     answer=ask_LLM(prompt)

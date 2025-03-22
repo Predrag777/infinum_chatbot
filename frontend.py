@@ -65,7 +65,7 @@ st.sidebar.title("History")
 # Check if there are old chats
 if st.session_state.history:
     for idx, chat in enumerate(st.session_state.history):
-        chat_text = f"Chat {idx + 1}: {chat[1]} -> {chat[2]}" # Answer from API
-        st.sidebar.markdown(f'<a href="javascript:void(0);" onclick="window.parent.location.hash=\'chat{idx}\'">{chat_text}</a>', unsafe_allow_html=True)
+        chat_text = f"{idx + 1}: {chat[0]}" # Answer from API
+        st.sidebar.markdown(f'<a href="#">{chat_text}</a>', unsafe_allow_html=True)
 else:
     st.sidebar.write("Empty history")
