@@ -8,14 +8,14 @@ from typing import List
 #Init FastAPI
 app=FastAPI()
 
+# Function for connecting with MYSQL DB
 def connect_to_db():
-    return  mysql.connector.connect(
-            host='localhost',
-            user='root',
-            password='',
-            database='infinum_chat' # My table
+    return mysql.connector.connect(
+        host='mysql', 
+        user='root', 
+        password='root_password',  
+        database='infinum_chat'  
     )
-
 # Retrieving history from DB
 @app.get("/history")
 async def get_history():
@@ -91,7 +91,7 @@ async def save_prompts(prompt: Prompt):
 
 ### Connect to OPENAI
 
-client = openai.OpenAI(api_key='APIKEY') # Connect to OpenAI with your API key
+client = openai.OpenAI(api_key='YOURAPIKEY') # Connect to OpenAI with your API key
 def ask_LLM(question: str) -> str:
     try:
         response = client.chat.completions.create(
