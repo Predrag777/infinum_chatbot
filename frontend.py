@@ -1,6 +1,11 @@
 import streamlit as st
 import requests
 
+
+
+
+
+
 st.title("Infinum JurisMind")
 
 
@@ -63,9 +68,20 @@ st.sidebar.title("History")
 
 
 # Check if there are old chats
+# Check if there are old chats
 if st.session_state.history:
     for idx, chat in enumerate(st.session_state.history):
-        chat_text = f"{idx + 1}: {chat[0]}" # Answer from API
-        st.sidebar.markdown(f'<a href="#">{chat_text}</a>', unsafe_allow_html=True)
+        chat_title = chat[0]  # Naslov iz API-ja
+
+        if st.sidebar.button(f"{idx + 1}: {chat_title}"):
+            try:
+                response = requests.get("http://127.0.0.1:8000/history_chat", params={"title": chat_title})
+                if response.status_code == 200:
+                    chat_data = response.json()
+                    st.session_state.current_discussion = [f"You: {msg['question']}\nJurisMind: {msg['answer']}" for msg in chat_data]
+                else:
+                    st.sidebar.error("Could not load chat history")
+            except Exception as e:
+                st.sidebar.error(f"Error loading chat: {str(e)}")
 else:
     st.sidebar.write("Empty history")
