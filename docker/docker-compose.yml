@@ -6,13 +6,38 @@ services:
     container_name: mysql-db
     environment:
       MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: infinum_chat 
+      MYSQL_DATABASE: infinum_chat
       MYSQL_PASSWORD: user_password  
     volumes:
       - mysql-data:/var/lib/mysql       
       - ./infinum_chat.sql:/docker-entrypoint-initdb.d/infinum_chat.sql  
     ports:
       - "3306:3306"  
+    networks:
+      - my_network
+
+  backend:
+    build: ../backend
+    container_name: backend-app
+    depends_on:
+      - mysql
+    ports:
+      - "8000:8000"
+    networks:
+      - my_network
+    environment:
+      - DATABASE_HOST=mysql
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=user_password
+      - DATABASE_NAME=infinum_chat
+
+  frontend:
+    build: ../frontend
+    container_name: frontend-app
+    depends_on:
+      - backend
+    ports:
+      - "8501:8501"
     networks:
       - my_network
 
