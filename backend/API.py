@@ -91,7 +91,7 @@ async def save_prompts(prompt: Prompt):
 
 ### Connect to OPENAI
 
-#client = ...
+client = openai.OpenAI(api_key='OPENAI_API_KEY') # Connect to OpenAI with your API key
 def ask_LLM(question: str) -> str:
     try:
         response = client.chat.completions.create(
