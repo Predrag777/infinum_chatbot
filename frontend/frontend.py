@@ -32,7 +32,8 @@ if user_prompt:
     answer = "Not connected to API for chatbot"
 
     try:
-        response = requests.get("http://backend:8000/ask", params={"prompt": user_prompt})  # Use user_prompt, not user_input
+        # Send a POST request with JSON body
+        response = requests.post("http://backend:8000/ask", json={"question": user_prompt})
         if response.status_code == 200:
             answer = response.json().get('answer', 'ERROR!!!')
         else:
@@ -42,11 +43,13 @@ if user_prompt:
 
     st.session_state.current_discussion.append(f"JurisMind: {answer}")
 
+    # Display the conversation
     for msg in st.session_state.current_discussion:
         if "You" in msg:
             st.markdown(f"<p style='color: blue'>{msg}</p>", unsafe_allow_html=True)
         elif 'JurisMind' in msg:
             st.markdown(f"<p style='color: green'>{msg}</p>", unsafe_allow_html=True)
+
 
 # Close and save chat in history
 if st.button('End chat'):
