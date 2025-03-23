@@ -103,7 +103,7 @@ async def save_prompts(prompt: Prompt):
 
 
 # Provide your API key
-my_key="API_KEY"
+my_key="YOUR_API_KEY"
 
 # We want to provide answer only for the legal questions.
 template = """You are a legal advisor. Only respond to legal questions related to law, contracts, rights, and legal procedures. If the question is not related to legal topics, respond with 'I can only answer legal questions related to law, contracts, rights, and legal procedures.'
