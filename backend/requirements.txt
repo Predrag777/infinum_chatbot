@@ -3,3 +3,7 @@ uvicorn
 mysql-connector-python
 openai
 pydantic
+psycopg2
+langchain>=0.0.152
+langchain_openai
+langchain-community
