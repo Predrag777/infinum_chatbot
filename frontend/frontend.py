@@ -72,7 +72,7 @@ with chat_container:
 
 
 
-if st.sidebar.button('End chat'):
+if st.sidebar.button('New Chat'):
     try:
         # Check if selected chat exist
         if 'current_discussion' in st.session_state and st.session_state.current_discussion:
