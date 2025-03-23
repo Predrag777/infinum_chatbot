@@ -39,7 +39,7 @@ async def get_history():
     return ([row[0]] for row in results)
 
 
-@app.get("/history_chat")  # Save old prompts from chat
+@app.get("/history_chat")  # Retreive prompts from old chat
 async def get_history_chat(title: str):
     conn = connect_to_db()
     cursor = conn.cursor()
