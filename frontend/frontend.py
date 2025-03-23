@@ -4,6 +4,17 @@ import random
 
 st.title("Infinum JurisMind")
 
+
+st.markdown("""
+            <style>
+                [data-testid=stSidebar] {
+                    background-color: #181818;
+                    color: white;
+                }
+            </style>
+""", unsafe_allow_html=True)
+
+
 # API response from history
 try:
     response = requests.get('http://backend:8000/history')  # History API endpoint
@@ -23,8 +34,8 @@ if 'history' not in st.session_state:
 if 'current_discussion' not in st.session_state:
     st.session_state.current_discussion = []
 
-############################Main part
-# Because we can not used CSS position: sticky; to keep input field to follow scrolling
+############################ Main part
+# Because we can not use CSS position: sticky; to keep input field to follow scrolling
 input_container = st.empty()
 
 # Place for the user prompt
@@ -38,7 +49,7 @@ if user_prompt:
 
     try:
         # Send a POST request with JSON body
-        response = requests.post("http://backend:8000/ask", json={"question": user_prompt})  # backend:8000
+        response = requests.post("http://backend:8000/ask", json={"question": user_prompt})  
         if response.status_code == 200:
             answer = response.json().get('answer', 'ERROR!!!')
         else:
@@ -83,17 +94,20 @@ if st.button('End chat'):
         else:
             st.error(f"Failed to save prompts: {response.status_code} - {response.text}")
 
-        # Add the current discussion to history and reset the current discussion
-        st.session_state.history.append(st.session_state.current_discussion)
+        # Reset the chat container
         st.session_state.current_discussion = []  # Reset chat
+        
+        # Clear the input field and chat history on the screen
+        st.rerun()
 
     except Exception as e:
         st.error(f"Error: {str(e)}")
-        # If there's an error, still add the current discussion to history and reset
-        st.session_state.history.append(st.session_state.current_discussion)
         st.session_state.current_discussion = []  # Reset chat
+        # Clear chat container on error
+        st.rerun()
 
-############################Sidebar
+
+############################ Sidebar
 # Sidebar where we would save the history of conversation
 st.sidebar.title("History")
 
