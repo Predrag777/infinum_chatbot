@@ -28,7 +28,7 @@ st.markdown("""
 
             .st-emotion-cache-1m4c89a{
                  color: white;
-                width: 12vw;
+                width: 17vw;
                 text-align: left;  
                 padding-left: 10px;
                 
@@ -106,41 +106,8 @@ with chat_container:
     st.markdown("</div>", unsafe_allow_html=True)
 
 
-# Close and save chat in history
-if st.button('End chat'):
-    try:
-        random_number = random.randint(1, 100000)
-        title = f"Chat{random_number}"
 
-        prompts = []
-        for i in range(0, len(st.session_state.current_discussion), 2):
-            question = st.session_state.current_discussion[i]
-            answer = st.session_state.current_discussion[i + 1] if i + 1 < len(st.session_state.current_discussion) else ""
-            prompts.append(question)
-            prompts.append(answer)
 
-        # Send data to the backend API to save it in DB
-        response = requests.post("http://backend:8000/save_prompt", json={  # Fixed URL
-            "title": title,
-            "prompts": prompts
-        })
-
-        if response.status_code == 200:
-            st.success("Prompts saved successfully.")
-        else:
-            st.error(f"Failed to save prompts: {response.status_code} - {response.text}")
-
-        # Reset the chat container
-        st.session_state.current_discussion = []  # Reset chat
-        
-        # Clear the input field and chat history on the screen
-        st.rerun()
-
-    except Exception as e:
-        st.error(f"Error: {str(e)}")
-        st.session_state.current_discussion = []  # Reset chat
-        # Clear chat container on error
-        st.rerun()
 
 
 ############################ Sidebar
@@ -169,7 +136,7 @@ if st.session_state.history:
                         # Print old prompts
                         for msg in st.session_state.current_discussion:
                             if "You" in msg:
-                                st.markdown(f"<p style='color: blue'>{msg}</p>", unsafe_allow_html=True)
+                                st.markdown(f"<p style='color: orange'>{msg}</p>", unsafe_allow_html=True)
                             elif 'JurisMind' in msg:
                                 st.markdown(f"<p style='color: green'>{msg}</p>", unsafe_allow_html=True)
                     else:
@@ -182,3 +149,44 @@ if st.session_state.history:
                 st.sidebar.error(f"Connection error: {str(e)}")
 else:
     st.sidebar.write("Empty history")
+
+
+if st.button('End chat'):
+    try:
+        # Check if selected chat exist
+        if 'current_discussion' in st.session_state and st.session_state.current_discussion:
+            # Save id
+            title = st.session_state.current_discussion[0].split(":")[1].strip()
+        else:
+            # If chat does not exist, generate new id for new chat
+            random_number = random.randint(1, 100000)
+            title = f"Chat{random_number}"
+
+        prompts = []
+        for i in range(0, len(st.session_state.current_discussion), 2):
+            question = st.session_state.current_discussion[i]
+            answer = st.session_state.current_discussion[i + 1] if i + 1 < len(st.session_state.current_discussion) else ""
+            prompts.append(question)
+            prompts.append(answer)
+
+        # Call API for saving chats and prompts
+        response = requests.post("http://backend:8000/save_prompt", json={  
+            "title": title,
+            "prompts": prompts
+        })
+
+        if response.status_code == 200:
+            st.success("Prompts saved successfully.")
+        else:
+            st.error(f"Failed to save prompts: {response.status_code} - {response.text}")
+
+        # Reset curr discussion
+        st.session_state.current_discussion = []  
+        
+        # Refresh page
+        st.rerun()
+
+    except Exception as e:
+        st.error(f"Error: {str(e)}")
+        st.session_state.current_discussion = []  
+        st.rerun()
