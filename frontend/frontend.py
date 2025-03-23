@@ -27,8 +27,25 @@ st.markdown("""
             }
 
             .st-emotion-cache-1m4c89a{
-                color: black;
-                width: 100%;
+                 color: white;
+                width: 12vw;
+                text-align: left;  
+                padding-left: 10px;
+                
+            }
+
+            [data-testid=stBaseButton-secondary]{
+                background-color: #181818;
+            }
+            [data-testid=stBaseButton-secondary]:hover{
+                background-color: #303030;
+            }
+
+            [data-testid=stBaseButton-secondary]{
+                color: white;
+            }
+            .st-emotion-cache-179n174{
+                color: white;
             }
             </style>
 """, unsafe_allow_html=True)
