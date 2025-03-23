@@ -18,7 +18,7 @@ Now, docker container is running. You can open application by pasting this url: 
 This application requires postgres. To run postgres in Ubuntu, you need to run *sudo service postgresql start*. You need to change line 9 in file *infinum_chatbot/frontend/frontend.py* on 
 **with open("frontend/Style/main.css", "r") as f:**. 
 
-You need to change 'backend' to 'localhost' in file *infinum_chatbot/backend/API.py* on lines 17, 52, 94, 131.
+You need to change 'backend' to 'localhost' in file *infinum_chatbot/backend/API.py* on lines 17, 52, 96, 133.
 
 After these changes, you can run streamlit run **infinum_chatbot/frontend/frontend.py**. 
 
@@ -36,5 +36,5 @@ these ports, you can change in the file **docker-compose.yml**.
 If you are running application from local
 
 
-In file **API.py**, you need to change 'backend' to 'localhost' on lines 17, 52, 94, 131.
+In file **API.py**, you need to change 'backend' to 'localhost' on lines 17, 52, 96, 133.
 
