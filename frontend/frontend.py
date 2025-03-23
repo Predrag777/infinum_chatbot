@@ -74,7 +74,6 @@ with chat_container:
     st.markdown("</div>", unsafe_allow_html=True)
 
 
-
 if st.sidebar.button('New Chat'):
     try:
         # Check if selected chat exist
