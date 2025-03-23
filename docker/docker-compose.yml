@@ -1,18 +1,18 @@
 version: '3.8'
 
 services:
-  mysql:
-    image: mysql:5.7
-    container_name: mysql-db
+  postgres:
+    image: postgres:13
+    container_name: postgres-db
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: infinum_chat
-      MYSQL_PASSWORD: user_password  
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 2000  
+      POSTGRES_DB: infinum_chat
     volumes:
-      - mysql-data:/var/lib/mysql       
-      - ./infinum_chat.sql:/docker-entrypoint-initdb.d/infinum_chat.sql  
+      - postgres-data:/var/lib/postgresql/data
+      - ./infinum_chat.sql:/docker-entrypoint-initdb.d/infinum_chat.sql
     ports:
-      - "3306:3306"  
+      - "5432:5432"
     networks:
       - my_network
 
@@ -20,15 +20,15 @@ services:
     build: ../backend
     container_name: backend-app
     depends_on:
-      - mysql
+      - postgres
     ports:
       - "8000:8000"
     networks:
       - my_network
     environment:
-      - DATABASE_HOST=mysql
-      - DATABASE_USER=root
-      - DATABASE_PASSWORD=user_password
+      - DATABASE_HOST=postgres 
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=2000  
       - DATABASE_NAME=infinum_chat
 
   frontend:
@@ -42,7 +42,7 @@ services:
       - my_network
 
 volumes:
-  mysql-data:
+  postgres-data:
 
 networks:
   my_network:
