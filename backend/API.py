@@ -4,13 +4,10 @@ import uvicorn
 import openai
 from pydantic import BaseModel
 from typing import List 
-#LangChain
-from langchain.prompts import PromptTemplate
-from langchain.chains import ConversationChain
-from langchain.chat_models import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI  
+from langchain.prompts import ChatPromptTemplate
 from langchain.memory import ConversationBufferMemory
-from langchain.agents import initialize_agent, Tool, AgentType
-from langchain.tools import DuckDuckGoSearchResults
+from langchain.chains import ConversationChain
 
 
 # Init FastAPI
@@ -23,7 +20,7 @@ def connect_to_db():
         user='postgres',
         password='2000',  
         database='infinum_chat'
-    )
+)
 
 
 
@@ -66,7 +63,7 @@ class Prompt(BaseModel):
     title: str
     prompts: List[str]
 
-# Save current prompt
+# Save current prompts from the chat
 @app.post("/save_prompt")
 async def save_prompts(prompt: Prompt):
     title = prompt.title
@@ -105,28 +102,43 @@ async def save_prompts(prompt: Prompt):
     return {"message": "Prompts saved successfully"}
 
 
-### Connect to OPENAI
-client = openai.OpenAI(api_key='YOURAPIKEY')  # Connect to OpenAI with your API key
+# Provide your API key
+my_key="API_KEY"
 
-def ask_LLM(question: str) -> str:
+# We want to provide answer only for the legal questions.
+template = """You are a legal advisor. Only respond to legal questions related to law, contracts, rights, and legal procedures. If the question is not related to legal topics, respond with 'I can only answer legal questions related to law, contracts, rights, and legal procedures.'
+Chat history: {history}
+Question: {input}"""
+
+# Crete template for prompts
+prompt = ChatPromptTemplate.from_template(template)
+
+# Init memory
+memory = ConversationBufferMemory(memory_key="history")
+
+# Init chat
+chat = ChatOpenAI(model="gpt-4", api_key=my_key)
+
+# Init COnversationChain
+conversation_chain = ConversationChain(
+    llm=chat,
+    prompt=prompt,
+    memory=memory,
+    verbose=True
+)
+
+class QuestionRequest(BaseModel):
+    question: str
+
+# API endpoint for chat responses
+@app.post("/ask")
+async def get_answer(request: QuestionRequest):
     try:
-        response = client.chat.completions.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": "You are a legal advisor. Only respond to legal questions related to law, contracts, rights, and legal procedures. If the question is not related to legal topics, respond with 'I can only answer legal questions related to law, contracts, rights, and legal procedures.'"},
-                {"role": "user", "content": question}
-            ]
-        )
-        return response.choices[0].message.content
+        answer = conversation_chain.run({"input": request.question})
+        return {"question": request.question, "answer": answer}
     except Exception as e:
-        return f"Error: {str(e)}"
+        return {"error": str(e)}
 
-# API endpoint for bot response
-@app.get("/ask")
-async def get_answer(prompt: str):
-    answer = ask_LLM(prompt)
-    return {"question": prompt, "answer": answer}
-
-
+# Run 
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=8000)
