@@ -63,42 +63,42 @@ class Prompt(BaseModel):
     title: str
     prompts: List[str]
 
-# Save current prompts from the chat
+# Save chat and its prompts
 @app.post("/save_prompt")
 async def save_prompts(prompt: Prompt):
     title = prompt.title
     prompts = prompt.prompts
-    
     conn = connect_to_db()
     cursor = conn.cursor()
-    
     try:
-        # Insert chat entry and get the chat_id using RETURNING
-        insert_chat = "INSERT INTO chat (title) VALUES (%s) RETURNING id"
-        cursor.execute(insert_chat, (title,))
-        chat_id = cursor.fetchone()[0]  # Get the chat_id from RETURNING
+        # Check if id of current chat exist
+        cursor.execute("SELECT id FROM chat WHERE title = %s", (title,))
+        chat_row = cursor.fetchone()
+        
+        if chat_row:
+            chat_id = chat_row[0]  
+        else:
+            # If chat does not exist, create new row in db
+            insert_chat = "INSERT INTO chat (title) VALUES (%s) RETURNING id"
+            cursor.execute(insert_chat, (title,))
+            chat_id = cursor.fetchone()[0] 
 
+        # Save chat prompts
         for i in range(0, len(prompts), 2):  
-            question = prompts[i]
-            answer = prompts[i + 1] if i + 1 < len(prompts) else ""  
-
-            # Insert prompt and connect it with the chat_id
-            insert_prompt = """
+            question=prompts[i]
+            answer=prompts[i+1] if i+1<len(prompts) else ""  
+            insert_prompt="""
                 INSERT INTO prompt (question, answer, chat) 
                 VALUES (%s, %s, %s)
             """
-            cursor.execute(insert_prompt, (question, answer, chat_id))
-        
+            cursor.execute(insert_prompt,(question,answer,chat_id))
         conn.commit()
-    
     except Exception as e:
         conn.rollback()
         return {"error": str(e)}
-    
     finally:
         cursor.close()
         conn.close()
-
     return {"message": "Prompts saved successfully"}
 
 
