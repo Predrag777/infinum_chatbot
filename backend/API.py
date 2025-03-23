@@ -11,11 +11,13 @@ app = FastAPI()
 # Function for connecting with PostgreSQL DB
 def connect_to_db():
     return psycopg2.connect(
-        host='localhost',  
+        host='postgres',  
         user='postgres',
         password='2000',  
         database='infinum_chat'
     )
+
+
 
 # Retrieving history from DB
 @app.get("/history")
@@ -119,4 +121,4 @@ async def get_answer(prompt: str):
 
 
 if __name__ == '__main__':
-    uvicorn.run(app, host='localhost', port=8000)
+    uvicorn.run(app, host='0.0.0.0', port=8000)
