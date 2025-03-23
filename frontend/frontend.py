@@ -11,6 +11,25 @@ st.markdown("""
                     background-color: #181818;
                     color: white;
                 }
+
+            .stApp{
+                    background-color: #303030;
+            }
+            #infinum-jurismind{
+                color: white;
+            }
+            .st-emotion-cache-128upt6{
+                background-color: #303030;
+            }
+
+            .stAppHeader{
+                background-color: #303030;
+            }
+
+            .st-emotion-cache-1m4c89a{
+                color: black;
+                width: 100%;
+            }
             </style>
 """, unsafe_allow_html=True)
 
@@ -64,7 +83,7 @@ with chat_container:
     st.markdown('<div class="chat-container">', unsafe_allow_html=True)
     for msg in st.session_state.current_discussion:
         if "You:" in msg:
-            st.markdown(f"<p style='color: blue'>{msg}</p>", unsafe_allow_html=True)
+            st.markdown(f"<p style='color: orange'>{msg}</p>", unsafe_allow_html=True)
         elif "JurisMind:" in msg:
             st.markdown(f"<p style='color: green'>{msg}</p>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
