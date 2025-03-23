@@ -1,120 +1,171 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Mar 22, 2025 at 02:26 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `infinum_chat`
+-- PostgreSQL database dump
 --
 
--- --------------------------------------------------------
+-- Dumped from database version 16.8 (Ubuntu 16.8-0ubuntu0.24.04.1)
+-- Dumped by pg_dump version 16.8 (Ubuntu 16.8-0ubuntu0.24.04.1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
 
 --
--- Table structure for table `chat`
+-- Name: chat; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE `chat` (
-  `id` int(11) NOT NULL,
-  `title` varchar(224) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE public.chat (
+    id integer NOT NULL,
+    title character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public.chat OWNER TO postgres;
 
 --
--- Dumping data for table `chat`
+-- Name: chat_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-INSERT INTO `chat` (`id`, `title`) VALUES
-(1, 'Chat1'),
-(2, 'Chat1'),
-(3, 'Chat70'),
-(4, 'Chat36'),
-(5, 'Chat77');
+CREATE SEQUENCE public.chat_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
--- --------------------------------------------------------
 
---
--- Table structure for table `prompt`
---
-
-CREATE TABLE `prompt` (
-  `id` int(11) NOT NULL,
-  `question` varchar(225) NOT NULL,
-  `answer` varchar(225) NOT NULL,
-  `chat` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+ALTER SEQUENCE public.chat_id_seq OWNER TO postgres;
 
 --
--- Dumping data for table `prompt`
+-- Name: chat_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-INSERT INTO `prompt` (`id`, `question`, `answer`, `chat`) VALUES
-(1, 'Pitanje 1', 'Odgovor 1', 1),
-(2, 'Pitanje 2', 'Odgovor 2', 1),
-(3, 'Question 1', 'Answer 1', 2),
-(4, 'Question 2', 'Answer 2', 2),
-(5, 'You: proba', 'JurisMind: It seems like you\'ve made a typo in your message, can you please provide more details so I can assist you better?', 3),
-(6, 'You: proba', 'JurisMind: Perhaps there was a typo in your question. Can you please provide more details or clarify your question so I can give you the best possible legal advice?', 3),
-(7, 'You: Probba', 'JurisMind: It seems like you might have made a typo. Could you please provide more context or clarify your question? I\'d be happy to help with any legal advice you need.', 5),
-(8, 'You: Proba', 'JurisMind: I\'m assuming you need some sort of legal advice or information. Could you please provide more context or detail so I can better assist you?', 5),
-(9, 'You: Proba', 'JurisMind: It appears that your message was cut off. What legal advice do you need help with? Please provide enough details so I can offer relevant guidance.', 5);
+ALTER SEQUENCE public.chat_id_seq OWNED BY public.chat.id;
+
 
 --
--- Indexes for dumped tables
+-- Name: prompt; Type: TABLE; Schema: public; Owner: postgres
 --
 
---
--- Indexes for table `chat`
---
-ALTER TABLE `chat`
-  ADD PRIMARY KEY (`id`);
+CREATE TABLE public.prompt (
+    id integer NOT NULL,
+    question character varying(1000) NOT NULL,
+    answer character varying(1000) NOT NULL,
+    chat integer NOT NULL
+);
+
+
+ALTER TABLE public.prompt OWNER TO postgres;
 
 --
--- Indexes for table `prompt`
---
-ALTER TABLE `prompt`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `chat` (`chat`);
-
---
--- AUTO_INCREMENT for dumped tables
+-- Name: prompt_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
---
--- AUTO_INCREMENT for table `chat`
---
-ALTER TABLE `chat`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+CREATE SEQUENCE public.prompt_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.prompt_id_seq OWNER TO postgres;
 
 --
--- AUTO_INCREMENT for table `prompt`
---
-ALTER TABLE `prompt`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- Constraints for dumped tables
+-- Name: prompt_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
---
--- Constraints for table `prompt`
---
-ALTER TABLE `prompt`
-  ADD CONSTRAINT `chat` FOREIGN KEY (`chat`) REFERENCES `chat` (`id`);
-COMMIT;
+ALTER SEQUENCE public.prompt_id_seq OWNED BY public.prompt.id;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+--
+-- Name: chat id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.chat ALTER COLUMN id SET DEFAULT nextval('public.chat_id_seq'::regclass);
+
+
+--
+-- Name: prompt id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.prompt ALTER COLUMN id SET DEFAULT nextval('public.prompt_id_seq'::regclass);
+
+
+--
+-- Data for Name: chat; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.chat (id, title) FROM stdin;
+1	Chat55
+2	Chat98
+3	Chat12
+\.
+
+
+--
+-- Data for Name: prompt; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.prompt (id, question, answer, chat) FROM stdin;
+2	You: SSSSS	JurisMind: Error: Error code: 401 - {'error': {'message': 'Incorrect API key provided: YOURAPIKEY. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}	2
+3	You: SSSSS	JurisMind: Error: Error code: 401 - {'error': {'message': 'Incorrect API key provided: YOURAPIKEY. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}	2
+4	You: WER	JurisMind: Error: Error code: 401 - {'error': {'message': 'Incorrect API key provided: YOURAPIKEY. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}	3
+5	You: WER	JurisMind: Error: Error code: 401 - {'error': {'message': 'Incorrect API key provided: YOURAPIKEY. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}	3
+\.
+
+
+--
+-- Name: chat_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.chat_id_seq', 3, true);
+
+
+--
+-- Name: prompt_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.prompt_id_seq', 5, true);
+
+
+--
+-- Name: chat chat_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.chat
+    ADD CONSTRAINT chat_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: prompt prompt_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.prompt
+    ADD CONSTRAINT prompt_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: prompt fk_chat; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.prompt
+    ADD CONSTRAINT fk_chat FOREIGN KEY (chat) REFERENCES public.chat(id) ON DELETE CASCADE;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
