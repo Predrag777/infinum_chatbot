@@ -2,29 +2,26 @@ import streamlit as st
 import requests
 import random
 
-
 st.title("Infinum JurisMind")
-
 
 # API response from history
 try:
-    response = requests.get('http://backend:8000/history')  # History API endpoint
+    response = requests.get('http://localhost:8000/history')  # History API endpoint
     if response.status_code == 200:
-        api_history = response.json()  
-        st.session_state.history = api_history  
+        api_history = response.json()
+        st.session_state.history = api_history
     else:
         st.error("Can not connect to server")
 except Exception as e:
     st.error(f"Server error: {str(e)}")
 
-
 # Save discussion history
 if 'history' not in st.session_state:
-    st.session_state.history = []   # Initialize global history in session
+    st.session_state.history = []  # Initialize global history in session
 
 # Save current discussion
 if 'current_discussion' not in st.session_state:
-    st.session_state.current_discussion=[]
+    st.session_state.current_discussion = []
 
 ############################Main part
 # Place for the user prompt
@@ -35,7 +32,7 @@ if user_prompt:
     answer = "Not connected to API for chatbot"
 
     try:
-        response = requests.get(f"http://backend:8000/ask", params={"prompt": user_prompt})  # Use user_prompt, not user_input
+        response = requests.get("http://localhost:8000/ask", params={"prompt": user_prompt})  # Use user_prompt, not user_input
         if response.status_code == 200:
             answer = response.json().get('answer', 'ERROR!!!')
         else:
@@ -51,7 +48,6 @@ if user_prompt:
         elif 'JurisMind' in msg:
             st.markdown(f"<p style='color: green'>{msg}</p>", unsafe_allow_html=True)
 
-
 # Close and save chat in history
 if st.button('End chat'):
     try:
@@ -65,9 +61,8 @@ if st.button('End chat'):
             prompts.append(question)
             prompts.append(answer)
 
-
         # Send data to the backend API to save it in DB
-        response = requests.post("http://backend:8000/save_prompt", json={
+        response = requests.post("http://localhost:8000/save_prompt", json={  # Fixed URL
             "title": title,
             "prompts": prompts
         })
@@ -87,7 +82,6 @@ if st.button('End chat'):
         st.session_state.history.append(st.session_state.current_discussion)
         st.session_state.current_discussion = []  # Reset chat
 
-
 ############################Sidebar
 # Sidebar where we would save the history of conversation
 st.sidebar.title("History")
@@ -99,7 +93,7 @@ if st.session_state.history:
 
         if st.sidebar.button(f"{idx + 1}: {chat_title}"):
             try:
-                response = requests.get(f"http://backend:8000/history_chat", params={"title": chat_title})
+                response = requests.get(f"http://localhost:8000/history_chat", params={"title": chat_title})  # Fixed URL
 
                 if response.status_code == 200:
                     chat_data = response.json()
@@ -119,10 +113,10 @@ if st.session_state.history:
                                 st.markdown(f"<p style='color: green'>{msg}</p>", unsafe_allow_html=True)
                     else:
                         st.sidebar.error("Invalid API response format")
-                    
+
                 else:
                     st.sidebar.error(f"API error: {response.status_code}")
-                
+
             except Exception as e:
                 st.sidebar.error(f"Connection error: {str(e)}")
 else:
