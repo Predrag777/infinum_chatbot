@@ -62,13 +62,16 @@ if user_prompt:
 chat_container = st.container()
 with chat_container:
     st.markdown('<div class="chat-container">', unsafe_allow_html=True)
+
     for msg in st.session_state.current_discussion:
         if "You:" in msg:
             st.markdown(f"<p style='color: orange'>{msg}</p>", unsafe_allow_html=True)
-        elif "JurisMind:" in msg:
-            st.markdown(f"<p style='color: green'>{msg}</p>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+        else:
+            lines = msg.split("\n")
+            for line in lines:
+                st.markdown(f"<p style='color: green'>{line}</p>", unsafe_allow_html=True)
 
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
 
