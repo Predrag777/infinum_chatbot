@@ -6,7 +6,7 @@ st.title("Infinum JurisMind")
 
 
 # Read style
-with open("frontend/Style/main.css", "r") as f:
+with open("Style/main.css", "r") as f:
     css_content = f.read()
 
 st.markdown(f"<style>{css_content}</style>", unsafe_allow_html=True)
@@ -132,8 +132,10 @@ if st.session_state.history:
 
                 if response.status_code == 200:
                     chat_data = response.json()
+                    #if len(st.session_state.current_discussion)>0:
+                    
                     st.session_state.current_discussion = []  # Reset current discussion
-
+                    
                     # Save old discussion to continue it
                     if isinstance(chat_data, list):
                         for msg in chat_data:
@@ -141,11 +143,7 @@ if st.session_state.history:
                             st.session_state.current_discussion.append(f"JurisMind: {msg['answer']}")
 
                         # Print old prompts
-                        for msg in st.session_state.current_discussion:
-                            if "You" in msg:
-                                st.markdown(f"<p style='color: orange'>{msg}</p>", unsafe_allow_html=True)
-                            elif 'JurisMind' in msg:
-                                st.markdown(f"<p style='color: green'>{msg}</p>", unsafe_allow_html=True)
+                        st.rerun()
 
                     else:
                         st.sidebar.error("Invalid API response format")
