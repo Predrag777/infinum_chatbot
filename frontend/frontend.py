@@ -54,7 +54,7 @@ if user_prompt:
 # Close and save chat in history
 if st.button('End chat'):
     try:
-        random_number = random.randint(1, 100)
+        random_number = random.randint(1, 100000)
         title = f"Chat{random_number}"
 
         prompts = []
