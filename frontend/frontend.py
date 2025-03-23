@@ -4,6 +4,7 @@ import random
 
 st.title("Infinum JurisMind")
 
+host='backend'
 
 # Read style
 with open("Style/main.css", "r") as f:
@@ -14,7 +15,7 @@ st.markdown(f"<style>{css_content}</style>", unsafe_allow_html=True)
 
 # API response from history
 try:
-    response = requests.get('http://backend:8000/history')  # History API endpoint
+    response = requests.get(f'http://{host}:8000/history')  # History API endpoint
     if response.status_code == 200:
         api_history = response.json()
         st.session_state.history = api_history
@@ -49,7 +50,7 @@ if user_prompt:
 
     try:
         # Send a POST request with JSON body
-        response = requests.post("http://backend:8000/ask", json={"question": user_prompt})  
+        response = requests.post(f"http://{host}:8000/ask", json={"question": user_prompt})  
         if response.status_code == 200:
             answer = response.json().get('answer', 'ERROR!!!')
         else:
@@ -93,7 +94,7 @@ if st.sidebar.button('New Chat'):
             prompts.append(answer)
 
         # Call API for saving chats and prompts
-        response = requests.post("http://backend:8000/save_prompt", json={  
+        response = requests.post(f"http://{host}:8000/save_prompt", json={  
             "title": title,
             "prompts": prompts
         })
@@ -130,7 +131,7 @@ if st.session_state.history:
 
         if st.sidebar.button(f"{idx + 1}: {chat_title}"):
             try:
-                response = requests.get(f"http://backend:8000/history_chat", params={"title": chat_title})  # Fixed URL
+                response = requests.get(f"http://{host}:8000/history_chat", params={"title": chat_title})  # Fixed URL
 
                 if response.status_code == 200:
                     chat_data = response.json()
