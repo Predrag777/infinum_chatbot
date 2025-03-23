@@ -5,50 +5,11 @@ import random
 st.title("Infinum JurisMind")
 
 
-st.markdown("""
-            <style>
-                [data-testid=stSidebar] {
-                    background-color: #181818;
-                    color: white;
-                }
+# Read style
+with open("frontend/Style/main.css", "r") as f:
+    css_content = f.read()
 
-            .stApp{
-                    background-color: #303030;
-            }
-            #infinum-jurismind{
-                color: white;
-            }
-            .st-emotion-cache-128upt6{
-                background-color: #303030;
-            }
-
-            .stAppHeader{
-                background-color: #303030;
-            }
-
-            .st-emotion-cache-1m4c89a{
-                 color: white;
-                width: 17vw;
-                text-align: left;  
-                padding-left: 10px;
-                
-            }
-
-            [data-testid=stBaseButton-secondary]{
-                background-color: #181818;
-            }
-            [data-testid=stBaseButton-secondary]:hover{
-                background-color: #303030;
-            }
-
-            [data-testid=stBaseButton-secondary]{
-                color: white;
-            }
-            .st-emotion-cache-179n174{
-                color: white;
-            }
-            </style>
-""", unsafe_allow_html=True)
+st.markdown(f"<style>{css_content}</style>", unsafe_allow_html=True)
 
 
 # API response from history
@@ -77,6 +38,9 @@ input_container = st.empty()
 # Place for the user prompt
 with input_container:
     user_prompt = st.chat_input("Enter your prompt", key="text_input")
+
+
+st.sidebar.subheader("More options")
 
 # Check if the user entered a prompt and handle it
 if user_prompt:
@@ -108,50 +72,7 @@ with chat_container:
 
 
 
-
-
-############################ Sidebar
-# Sidebar where we would save the history of conversation
-st.sidebar.title("History")
-
-# Check if there are old chats
-if st.session_state.history:
-    for idx, chat in enumerate(st.session_state.history):
-        chat_title = chat[0]  # Title from API
-
-        if st.sidebar.button(f"{idx + 1}: {chat_title}"):
-            try:
-                response = requests.get(f"http://backend:8000/history_chat", params={"title": chat_title})  # Fixed URL
-
-                if response.status_code == 200:
-                    chat_data = response.json()
-                    st.session_state.current_discussion = []  # Reset current discussion
-
-                    # Save old discussion to continue it
-                    if isinstance(chat_data, list):
-                        for msg in chat_data:
-                            st.session_state.current_discussion.append(f"You: {msg['question']}")
-                            st.session_state.current_discussion.append(f"JurisMind: {msg['answer']}")
-
-                        # Print old prompts
-                        for msg in st.session_state.current_discussion:
-                            if "You" in msg:
-                                st.markdown(f"<p style='color: orange'>{msg}</p>", unsafe_allow_html=True)
-                            elif 'JurisMind' in msg:
-                                st.markdown(f"<p style='color: green'>{msg}</p>", unsafe_allow_html=True)
-                    else:
-                        st.sidebar.error("Invalid API response format")
-
-                else:
-                    st.sidebar.error(f"API error: {response.status_code}")
-
-            except Exception as e:
-                st.sidebar.error(f"Connection error: {str(e)}")
-else:
-    st.sidebar.write("Empty history")
-
-
-if st.button('End chat'):
+if st.sidebar.button('End chat'):
     try:
         # Check if selected chat exist
         if 'current_discussion' in st.session_state and st.session_state.current_discussion:
@@ -190,3 +111,49 @@ if st.button('End chat'):
         st.error(f"Error: {str(e)}")
         st.session_state.current_discussion = []  
         st.rerun()
+
+
+
+
+
+############################ Sidebar
+# Sidebar where we would save the history of conversation
+st.sidebar.title("History")
+
+
+# Check if there are old chats
+if st.session_state.history:
+    for idx, chat in enumerate(st.session_state.history):
+        chat_title = chat[0]  # Title from API
+
+        if st.sidebar.button(f"{idx + 1}: {chat_title}"):
+            try:
+                response = requests.get(f"http://backend:8000/history_chat", params={"title": chat_title})  # Fixed URL
+
+                if response.status_code == 200:
+                    chat_data = response.json()
+                    st.session_state.current_discussion = []  # Reset current discussion
+
+                    # Save old discussion to continue it
+                    if isinstance(chat_data, list):
+                        for msg in chat_data:
+                            st.session_state.current_discussion.append(f"You: {msg['question']}")
+                            st.session_state.current_discussion.append(f"JurisMind: {msg['answer']}")
+
+                        # Print old prompts
+                        for msg in st.session_state.current_discussion:
+                            if "You" in msg:
+                                st.markdown(f"<p style='color: orange'>{msg}</p>", unsafe_allow_html=True)
+                            elif 'JurisMind' in msg:
+                                st.markdown(f"<p style='color: green'>{msg}</p>", unsafe_allow_html=True)
+
+                    else:
+                        st.sidebar.error("Invalid API response format")
+
+                else:
+                    st.sidebar.error(f"API error: {response.status_code}")
+
+            except Exception as e:
+                st.sidebar.error(f"Connection error: {str(e)}")
+else:
+    st.sidebar.write("Empty history")
