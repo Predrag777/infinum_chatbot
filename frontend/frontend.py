@@ -6,7 +6,7 @@ st.title("Infinum JurisMind")
 
 # API response from history
 try:
-    response = requests.get('http://localhost:8000/history')  # History API endpoint
+    response = requests.get('http://backend:8000/history')  # History API endpoint
     if response.status_code == 200:
         api_history = response.json()
         st.session_state.history = api_history
@@ -32,7 +32,7 @@ if user_prompt:
     answer = "Not connected to API for chatbot"
 
     try:
-        response = requests.get("http://localhost:8000/ask", params={"prompt": user_prompt})  # Use user_prompt, not user_input
+        response = requests.get("http://backend:8000/ask", params={"prompt": user_prompt})  # Use user_prompt, not user_input
         if response.status_code == 200:
             answer = response.json().get('answer', 'ERROR!!!')
         else:
@@ -62,7 +62,7 @@ if st.button('End chat'):
             prompts.append(answer)
 
         # Send data to the backend API to save it in DB
-        response = requests.post("http://localhost:8000/save_prompt", json={  # Fixed URL
+        response = requests.post("http://backend:8000/save_prompt", json={  # Fixed URL
             "title": title,
             "prompts": prompts
         })
@@ -93,7 +93,7 @@ if st.session_state.history:
 
         if st.sidebar.button(f"{idx + 1}: {chat_title}"):
             try:
-                response = requests.get(f"http://localhost:8000/history_chat", params={"title": chat_title})  # Fixed URL
+                response = requests.get(f"http://backend:8000/history_chat", params={"title": chat_title})  # Fixed URL
 
                 if response.status_code == 200:
                     chat_data = response.json()
