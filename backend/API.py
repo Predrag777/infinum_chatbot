@@ -4,6 +4,14 @@ import uvicorn
 import openai
 from pydantic import BaseModel
 from typing import List 
+#LangChain
+from langchain.prompts import PromptTemplate
+from langchain.chains import ConversationChain
+from langchain.chat_models import ChatOpenAI
+from langchain.memory import ConversationBufferMemory
+from langchain.agents import initialize_agent, Tool, AgentType
+from langchain.tools import DuckDuckGoSearchResults
+
 
 # Init FastAPI
 app = FastAPI()
