@@ -24,15 +24,12 @@ if 'current_discussion' not in st.session_state:
     st.session_state.current_discussion = []
 
 ############################Main part
+# Because we can not used CSS position: sticky; to keep input field to follow scrolling
+input_container = st.empty()
+
 # Place for the user prompt
-
-input_container = st.container()
 with input_container:
-    st.markdown('<div class="fixed-bottom">', unsafe_allow_html=True)
     user_prompt = st.chat_input("Enter your prompt", key="text_input")
-    st.markdown('</div>', unsafe_allow_html=True)
-
-
 
 # Check if the user entered a prompt and handle it
 if user_prompt:
@@ -50,7 +47,6 @@ if user_prompt:
         answer = f"I can not answer due to connection error: {str(e)}"
 
     st.session_state.current_discussion.append(f"JurisMind: {answer}")
-
 
 chat_container = st.container()
 with chat_container:
