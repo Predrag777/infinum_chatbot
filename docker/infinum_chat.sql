@@ -108,23 +108,10 @@ ALTER TABLE ONLY public.prompt ALTER COLUMN id SET DEFAULT nextval('public.promp
 -- Data for Name: chat; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.chat (id, title) FROM stdin;
-1	Chat55
-2	Chat98
-3	Chat12
-\.
-
 
 --
 -- Data for Name: prompt; Type: TABLE DATA; Schema: public; Owner: postgres
 --
-
-COPY public.prompt (id, question, answer, chat) FROM stdin;
-2	You: SSSSS	JurisMind: Error: Error code: 401 - {'error': {'message': 'Incorrect API key provided: YOURAPIKEY. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}	2
-3	You: SSSSS	JurisMind: Error: Error code: 401 - {'error': {'message': 'Incorrect API key provided: YOURAPIKEY. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}	2
-4	You: WER	JurisMind: Error: Error code: 401 - {'error': {'message': 'Incorrect API key provided: YOURAPIKEY. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}	3
-5	You: WER	JurisMind: Error: Error code: 401 - {'error': {'message': 'Incorrect API key provided: YOURAPIKEY. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}	3
-\.
 
 
 --
