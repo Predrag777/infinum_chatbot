@@ -1,5 +1,13 @@
 # infinum_chatbot
 
+
+## TECHNOLOGIES
+1. Python
+   - Streamlit
+   - LangChani
+2. Docker
+3. PostgreSQL
+
 ## HOW TO RUN APP IN DOCKER
 ### Basic guideline
 To run this project, you will need to provide an **OPENAI key**. You need to add it in file *infinum_chatbot/backend/API.py*, on line 106, variable **my_key**. This application is running on **port 8501**, so be sure this port is not available.<br>
