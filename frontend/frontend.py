@@ -70,7 +70,7 @@ with chat_container:
         else:
             lines = msg.split("\n")
             for line in lines:
-                st.markdown(f"<p style='color: green'>{line}</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='color: white'>{line}</p>", unsafe_allow_html=True)
 
     st.markdown("</div>", unsafe_allow_html=True)
 
